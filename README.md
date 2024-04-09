@@ -1,9 +1,9 @@
 A simple stupid tool for getting daily Bing wallpaper.
 
-Once one pic one day.
+Once one pic per day.
 
 Only 1920*1080.
 
 learning rust.
 
-with help of github of copilot
+with helping of github of copilot
