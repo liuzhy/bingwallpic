@@ -4,6 +4,6 @@ Once one pic one day.
 
 Only 1920*1080.
 
-in rust.
+learning rust.
 
 with help of github of copilot
