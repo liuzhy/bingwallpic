@@ -6,4 +6,4 @@ Only 1920*1080.
 
 learning rust.
 
-with helping of github of copilot
+with helping of github copilot
