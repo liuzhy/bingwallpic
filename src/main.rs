@@ -1,23 +1,38 @@
 use std::{io::{Read, Write}, net::TcpStream};
 use native_tls::TlsConnector;
 use serde_json::Value;
+
 fn main() {
+    print!("{}\n",download());
+}
+
+
+
+
+fn download() -> String {
     let host = "www.bing.com";
     let port = "443";
-    let api = "/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=en-us";
+    let api = "/HPImageArchive.aspx?format=js&idx=0&n=8&mkt=EN-US";
     let rep1 = get_body(get_https_response(host,api,port));
 
     let buf = String::from_utf8_lossy(&rep1);
     let v: Value = serde_json::from_str(&buf).unwrap();
-    let imgurl = v["images"][0]["url"].as_str().unwrap();
+    let imglist = v["images"].as_array().unwrap();
+    let mut savedcount = 0;
+    for img in imglist {
+        let imgurl = img["url"].as_str().unwrap();
+        let start_index = imgurl.find("=").unwrap();
+        let end_index = imgurl.find("&").unwrap();
+        let img_name =format!("{}/{}",std::env::current_exe().unwrap().parent().unwrap().display(), &imgurl[start_index+1..end_index]);
 
-    let start_index = imgurl.find("=").unwrap();
-    let end_index = imgurl.find("&").unwrap();
-    let img_name = &imgurl[start_index+1..end_index];
+        if std::fs::metadata(&img_name).is_err() {
+            let resp2 = get_body(get_https_response(host,imgurl,port));
+            std::fs::write(&img_name, &resp2).unwrap();
+            savedcount += 1;
+        }
+    }
 
-    let resp2 = get_body(get_https_response(host,imgurl,port));
-    std::fs::write(img_name, &resp2).unwrap();
-    println!("{} saved", img_name);
+    format!("{} images saved!",savedcount)
 }
 
 fn get_body(response: Vec<u8>) -> Vec<u8> {

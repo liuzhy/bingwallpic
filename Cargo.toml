@@ -3,9 +3,11 @@ name = "bingwallpic"
 version = "0.1.0"
 edition = "2021"
 
+
 [dependencies]
 native-tls = "0.2.11"
 serde_json = "1.0.115"
+
 
 [profile.release]
 strip = true  # Automatically strip symbols from the binary.
